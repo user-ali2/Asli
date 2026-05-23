@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<section class="hero">
+    <div class="hero-overlay">
+        <div class="hero-content">
+            <h1>
+                Fresh Food, <br>
+                Fast Delivery , <br>
+                Great Experience.
+            </h1>
+
+            <p>
+                Premium dining, quick takeout, 
+                and reliable delivery.
+            </p>
+
+            <div class="hero-buttons">
+                <a href="{% url 'food' %}" class="hero-btn explore-btn">
+                    Explore Restaurant
+                </a>
+
+                <a href="{% url 'takeout' %}" class="hero-btn takeout-btn">
+                    Order Takeout
+                </a>
+
+                <a href="{% url 'delivery' %}" class="hero-btn delivery-btn" >
+                    Get Delivery
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="services">
+    <h2>Our Services</h2>
+    <div class="service-container">
+
+        <div class="service-card">
+            <i class="fas fa-utensils"></i>
+
+            <h3>Food Experience</h3>
+            <p>
+                Enjoy premium dining and unforgettable  meals 
+                in a comfortable atmosphere.
+            </p>
+        </div>
+
+        <div class="service-card">
+            <i class="fas fa-box"></i>
+
+            <h3>Takeout</h3>
+            <p>
+                Fast pickup service for the customers
+                on the go.
+            </p>
+        </div>
+
+        <div class="service-card">
+
+            <i class="fas fa-motorcycle"></i>
+            <h3>Delivery</h3>
+
+            <p>
+                Reliable home delivery directly to your location
+            </p>
+        </div>
+    
+    </div>
+        
+</section>
+<section class="featured-meals">
+    <h2>Popular Meals</h2>
+    <div class="meal-container">
+        {% for food in featured_foods %}
+
+        <div class="meal-card">
+            <img src="{{food.image.url}} " alt="{{ food.name }}">
+
+            <div class="meal-info">
+                <h3>{{ food.name }}</h3>
+                <p>Ksh {{ food.price }}</p>
+
+            </div>
+        </div>
+        {% empty %}
+        <p>No feautured meals available</p>
+        {% endfor %}
+    </div>
+
+    <div class="view-menu-area">
+        <a href="{% url 'food' %}" class="view-menu-btn" >
+            View Full Menu
+        </a>
+    </div>
+</section>
+
+
+<section class="cta-section">
+
+    <div class="cta-content">
+
+        <h2>
+            Ready To Enjoy Delicious Meals?
+        </h2>
+
+        <p>
+            Explore our menu and order your favorite meals today.
+        </p>
+
+        <a href="{% url 'food' %}" class="cta-btn">
+            Order Now
+        </a>
+
+    </div>
+
+</section>
+{% endblock %}
