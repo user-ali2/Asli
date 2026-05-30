@@ -4,16 +4,28 @@
     box-sizing: border-box;
 }
 
-body{
+html,body{
+    height: 100%;
+    margin: 0;
     font-family: Arial, Helvetica, sans-serif;
     background: #f5f5f5;
 
+}
+body{
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main{
+    flex: 1;
 }
 
 .hero {
 
     position: relative;
-    height: 100vh;
+    padding: 120px 20px;
+    min-height: 70vh;
     
     background:  linear-gradient(
         135deg,
@@ -43,7 +55,8 @@ body{
     position: relative;
     z-index: 2;
     color: white;
-    max-width: 850px;
+    width: 100%;
+    text-align: center;
 }
 
 
@@ -52,6 +65,9 @@ body{
     line-height: 1.2;
     margin-bottom: 25px;
     font-weight: bold;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .hero-content p {
@@ -111,7 +127,7 @@ body{
 
 .nav1 h2 {
     margin: 0;
-    font-size: 22;
+    font-size: 22px;
     color: #ffcc00;
 }
 
@@ -123,14 +139,34 @@ body{
     padding: 0;
 }
 
-.nav1 ul li a {
-    text-decoration: none;
+.nav1 form {
+    margin: 0;
+    padding: 0;
+}
+
+.nav1 ul li {
+    display: flex;
+    align-items: center;
+}
+
+.nav1 ul li a,
+.nav1 ul li button {
+    background: none;
+    border: none;
     color: white;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 16px;
     font-weight: 500;
+    padding: 0;
+    margin: 0;
+    transition: 0.3s;
+    cursor: pointer;
 
 }
 
-.nav1 ul li a:hover {
+.nav1 ul li a:hover,
+.nav1 ul li button:hover {
     color: #ffcc00;
 }
 
@@ -138,12 +174,13 @@ body{
     background-color: #111;
     color: white;
     padding: 40px 20px;
-    margin-top: 50px;
+    margin-top: auto;
+    
 }
 
 .footer-container {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     flex-wrap: wrap;
 }
 
@@ -346,7 +383,10 @@ body{
     transform:translateY(-3px);
 }
 
-@media(max-width:768){
+@media(max-width:768px){
+    .hero-content{
+        text-align: center;
+    }
     .hero-content h1{
         font-size: 2.5rem;
 

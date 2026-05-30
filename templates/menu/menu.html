@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'menu/menu.css' %}">
+{% endblock %}
+
+{% block content %}
+<h1 style="text-align: center;">Our Menu</h1>
+
+<section class="search-box">
+    <input type="text" id="foodSearch" placeholder="Search foods">
+</section>
+
+<section class="category-buttons">
+    <button data-category="all">All</button>
+
+    {% for category in categories %}
+
+    <button data-category="{{ category.slug }}">
+        {{ category.name }}
+    </button>
+    {% endfor %}
+</section>
+
+
+
+<section class="food-grid">
+    {% for food in foods %}
+
+    <div class="food-card" data-category="{{ food.category.slug }}">
+        <img src="{{ food.image.url }}" alt="{{ food.name }}">
+
+        <h3 style="padding: 10px;">{{ food.name }}</h3>
+        
+
+        <p>{{ food.description|truncatewords:20 }}</p>
+
+        <span>Ksh {{ food.price }}</span>
+
+        <a href="{% url 'add_to_cart' food.id %}" class="btn add-to-cart">
+            Add To Cart
+        </a>
+    </div>
+    {% endfor %}
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const buttons = document.querySelectorAll('.category-buttons button');
+
+    const cards = document.querySelectorAll('.food-card');
+
+   // buttons.forEach(button => {
+     //   button.addEventListener('click', () => {
+       //     const category = button.dataset.category;
+
+//            cards.forEach(card => {
+//
+  //              if (category === 'all' || card.dataset.category === category) {
+    //                card.style.display = 'block'
+      //          }
+//
+  //              else {
+    //                card.style.display = 'none'
+      //          }
+        //    });
+        //});
+    //});
+
+    const searchInput = document.getElementById('foodSearch');
+
+   // searchInput.addEventListener('keyup', () => {
+     //   const value = searchInput.value.toLowerCase();
+
+       // cards.forEach(card => {
+         //   const text = card.innerText.toLowerCase();
+
+//            if (text.includes(value)) {
+  //              card.style.display = 'block';
+
+//            }
+
+  //          else {
+    //            card.style.display = 'none'
+      //      }
+        //});
+    //});
+
+    function filterCards() {
+
+        const searchValue = searchInput.value.toLowerCase();
+
+        const activeCategory =
+            document.querySelector('.active-category')?.dataset.category || 'all';
+
+        cards.forEach(card => {
+
+            const matchesCategory =
+                activeCategory === 'all' ||
+                card.dataset.category === activeCategory;
+
+            const matchesSearch =
+                card.innerText.toLowerCase().includes(searchValue);
+
+            if (matchesCategory && matchesSearch) {
+                card.style.display = 'block';
+            } 
+            
+            else {
+                card.style.display = 'none';
+            }
+
+        });
+    }
+
+    buttons.forEach(button => {
+        button.addEventListener('click', () => {
+            buttons.forEach(b => b.classList.remove('active-category'));
+            button.classList.add('active-category');
+
+            filterCards();
+        });
+    });
+
+    searchInput.addEventListener('keyup', filterCards)
+
+    filterCards();
+</script>
+{% endblock %}

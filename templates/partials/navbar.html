@@ -1,4 +1,4 @@
-
+{% load user_tags %}
     <nav class="nav1">
         <h2>Freeze Restaurant</h2>
         
@@ -7,6 +7,35 @@
             <li><a href="{% url 'food' %}">Food Experiance</a></li>
             <li><a href="{% url 'takeout' %}">Take Out</a></li>
             <li><a href="{% url 'delivery' %}">Delivery</a></li>
-           
+
+            {% if request.user.is_authenticated %}
+
+                <li>Hello {{ request.user.username }}</li>
+
+                {% if request.user|has_group:"Owner"  %}
+                    <li><a href="{% url 'owner_dashboard' %}">Dashboard</a></li>
+
+                    {% elif request.user|has_group:"Management" %}
+                        <li><a href="{% url 'management_dashboard' %}">Dashboard</a></li>
+
+                    {% elif request.user|has_group:"Staff" %}
+                        <li><a href="{% url 'staff_dashboard' %}">Dashboard</a></li>
+
+                    {% else %}
+                        <li><a href="{% url 'home' %}">Explore Menu</a></li>
+                    {% endif %}
+
+                <li>
+                    <form action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                        <button type="submit">Logout</button>
+                    </form>
+                </li>
+
+            {% else %}
+                <li><a href="{% url 'login' %}">Login</a></li>
+                <li><a href="{% url 'register' %}">Register</a></li>
+
+            {% endif %}
         </ul>
     </nav>

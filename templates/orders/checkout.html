@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'orders/checkout.css' %}">
+{% endblock %}
+{% block content %}
+<section class="checkout-section">
+    <div class="checkout-header">
+        <h1>Checkout</h1>
+        <p>Complete your order</p>
+    </div>
+
+    <div class="checkout-card">
+        <div class="checkout-summary">
+            <h2>Order Summary</h2>
+
+            <div class="summary-box">
+                <span>Total Amount</span>
+                <strong>Ksh {{ cart.total_price }}</strong>
+            </div>
+
+            <form method="post" class="checkout-form">
+                {% csrf_token %}
+                {{ form.as_p }}
+
+                <button type="submit" class="place-order-btn">Place Order</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

@@ -10,7 +10,7 @@ class Category(models.Model):
     
 class Food(models.Model):
 
-    Category = models.ForeignKey(
+    category = models.ForeignKey(
         Category,
         on_delete=models.CASCADE,
         related_name='foods'
@@ -53,11 +53,11 @@ class SiteSettings(models.Model):
 
     facebook = models.URLField(blank=True, null=True)
 
-    instigram = models.URLField(blank=True, null=True)
+    instagram = models.URLField(blank=True, null=True)
 
     tiktok = models.URLField(blank=True, null=True)
 
-    x=models.URLField(blank=True, null=True)
+    twitter=models.URLField(blank=True, null=True)
 
     def __str__(self):
         return self.restaurant_name

@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'orders/cart.css' %}" >
+{% endblock %}
+
+{% block content %}
+<section class="cart-section">
+    <h1 style="text-align: center;">Your Cart</h1>
+
+    {% if cart.items.all %}
+
+    <div class="cart-container" >
+        <div class="cart-items">
+
+            {% for item in cart.items.all %}
+            <div class="cart-card">
+
+                <div class="cart-info">
+                    <h2>{{ item.food.name }}</h2>
+
+                    <p class="price">Price: Ksh {{ item.total_price }}</p>
+
+                    <p class="quantity-text">Quantity: {{item.quantity }}</p>
+                </div>
+
+                <div class="cart-actions" >
+                    <div class="quantity-box">
+                        <a href="{% url 'increase_quantity' item.id %}" class="qty-btn">+</a>
+
+                        <a href="{% url 'decrease_quantity' item.id %}" class="qty-btn">-</a>
+
+                        <a href="{% url 'remove_from_cart' item.id %}" class="remove-btn">Remove</a>
+
+                    </div>
+
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="cart-summary">
+                <div class="summary-row">
+                    <span>Total</span>
+                    <strong>Ksh {{ cart.total_price }} </strong>
+                </div>
+
+                <a href="{% url 'checkout' %}" class="checkout-btn"> 
+                    Checkout
+                </a>
+            </div>
+        </div>
+    
+    {% else %}
+
+    <div class="empty-cart">
+        <h2>Your cart is empty</h2>
+    </div>
+
+    {% endif %}
+    </div>
+
+</section>
+{% endblock %}
+
