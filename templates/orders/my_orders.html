@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'orders/my_orders.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="orders-container" >
+    <h1>My Orders</h1>
+
+    {% for order in orders %}
+
+    <div class="order-card">
+        <div class="order-header">
+            <h3>Order #{{ order.id }}</h3>
+
+            <p>Status: {{ order.get_status_display }}</p>
+
+             <span class="badge">
+                {{ order.get_order_type_display|title }}
+            </span>
+
+        </div>
+
+        <p><strong>Total:</strong> Ksh {{ order.total_price }} </p>
+        {% if order.payment %}
+            <p><strong>Payment Method:</strong> {{ order.payment.get_method_display }} </p>
+            <p><strong>Payment Status: </strong> {{ order.payment.get_status_display }} </p>
+        {% endif %}
+        {% if order.status == "cancelled" %}
+
+            <p class="cancelled">Order Cancelled</p>
+            
+        {% else %}
+
+           
+                
+
+                
+
+        <div class="tracking">
+            <div class="step {% if order.status == 'pending' %}active{% elif order.status != 'pending' %}done{% endif %}">
+                🟡 Order Placed
+            </div>
+
+    
+            <div class="step {% if order.status == 'preparing' %}active{% elif order.status == 'ready' or order.status == 'picked_up' or order.status == 'on_the_way' or order.status == 'delivered' or order.status == 'completed' %}done{% endif %}">
+                👨‍🍳 Preparing
+            </div>
+
+            <div class="step {% if order.status == 'ready' %}active{% elif order.status == 'picked_up' 
+                or order.status == 'on_the_way'
+                or order.status == 'delivered' 
+                or order.status == 'completed' %}done{% endif %}">🍽️ Ready</div>
+
+            {% if order.order_type == 'delivery' %}
+
+                <div class="step {% if order.status == 'picked_up' %}active{% elif order.status == 'on_the_way' or order.status == 'delivered' or order.status == 'completed' %}done{% endif %}">
+                    📦 Picked Up
+                </div>
+
+                <div class="step {% if order.status == 'on_the_way' %}active{% elif order.status == 'delivered' or order.status == 'completed' %}done{% endif %}">
+                    🚴 On The Way
+                </div>
+
+            {% endif %}
+
+            <div class="step {% if order.status == 'completed' or order.status == 'delivered' %}done{% endif %}">
+                ✅ Completed
+            </div>
+
+        
+            </div>
+
+        {% endif %}
+
+        <a href="#" class="view-btn">
+            View Details
+        </a>
+        {% if order.payment.status == "paid" %}
+        <a href="{% url 'request_refund' order.id %}" class="refund-btn">
+            Request Refund
+        </a>
+        {% endif %}
+
+        {% if order.status == 'pending' %}
+
+        <form method="post" action="{% url 'cancel_order' order.id %}">
+            {% csrf_token %}
+            <button type="submit" class="cancel-btn">
+                Cancel Order
+            </button>
+        </form>
+
+        {% endif %}
+    </div>
+
+    {% empty %}
+
+        <p>You have not placed orders yet</p>
+    {% endfor %}
+</div>
+{% endblock %}

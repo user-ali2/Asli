@@ -17,15 +17,15 @@
             </p>
 
             <div class="hero-buttons">
-                <a href="{% url 'menu' %}" class="hero-btn explore-btn">
+                <a href="{% url 'menu' %}?type=dine_in" class="hero-btn explore-btn">
                     Explore Restaurant
                 </a>
 
-                <a href="{% url 'menu' %}" class="hero-btn takeout-btn">
+                <a href="{% url 'menu' %}?type=takeout" class="hero-btn takeout-btn">
                     Order Takeout
                 </a>
 
-                <a href="{% url 'delivery' %}" class="hero-btn delivery-btn" >
+                <a href="{% url 'menu' %}?type=delivery" class="hero-btn delivery-btn" >
                     Get Delivery
                 </a>
             </div>

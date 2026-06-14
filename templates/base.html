@@ -8,6 +8,61 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     {% block extra_css %}{% endblock %}
+    <style>
+        .refund-container{
+            max-width: 700px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,.08);
+
+        }
+
+        .refund-container h2 {
+            margin-bottom: 15px;
+        }
+
+        .refund-container p{
+            margin-bottom: 20px;
+            color: #666;
+        }
+
+        .refund-container form{
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .refund-container label{
+            font-weight: 600;
+        }
+
+        .refund-container select,
+        .refund-container textarea{
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        .refund-container button{
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            background: #d32f2f;
+            color: white;
+            transition: .3s;
+        }
+
+        .refund-container button:hover{
+            transform: translateY(-2px);
+        }
+    </style>
 </head>
 <body>
     {% include 'partials/navbar.html' %}

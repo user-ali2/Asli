@@ -1,51 +1,36 @@
-from django.shortcuts import redirect
+from django.shortcuts import render, redirect
 from django.core.exceptions import PermissionDenied
 from functools import wraps
 from .utils import in_group
-#from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login
 
 
-def owner_required(view_func):
-    @wraps(view_func)
-    def wrapper(request, *args, **kwargs):
 
-        if not request.user.is_superuser:
+def role_required(role_name):
+    def decorator(view_func):
+
+        @wraps(view_func)
+        def wrapper(request, *args, **kwargs):
+
+            if not request.user.is_authenticated:
+                #raise PermissionDenied
+                return redirect("staff_login")
+            if request.user.is_superuser:
+                return view_func(request, *args, **kwargs)
+            
+            if not in_group(request.user, role_name):
+                #raise PermissionDenied
+                return redirect ("staff_login")
+
             return view_func(request, *args, **kwargs)
-        
-        if not in_group(request.user, 'Owner'):
-            #return redirect('home')
-            raise PermissionDenied
-        return view_func(request, *args, **kwargs)
+        return wrapper
     
-    return wrapper
+    return decorator
 
-
-def management_required(view_func):
-
-    @wraps(view_func)
-    def wrapper(request, *args, **kwargs):
-        if not request.user.is_superuser:
-            return view_func(request, *args, **kwargs)
-        
-        if not in_group(request.user, 'Management'):
-            #return redirect ('home')
-            raise PermissionDenied
-        return view_func(request, *args, **kwargs)
-    
-    return wrapper
-
-def staff_required(view_func):
-
-    @wraps(view_func)
-    def wrapper(request, *args, **kwargs):
-        
-        if not request.user.is_superuser:
-            return view_func(request, *args, **kwargs)
-        
-        if not in_group(request.user, 'Staff'):
-            #return redirect('home')
-            raise PermissionDenied
-        return view_func(request, *args, **kwargs)
-
-    return wrapper 
-    
+owner_required = role_required("Owner")
+manager_required = role_required("Manager")
+chef_required = role_required("Chef")
+cashier_required = role_required("Cashier")
+rider_required = role_required("Rider")
+waiter_required = role_required("Waiter")
+customer_required = role_required("Customer")

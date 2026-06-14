@@ -1,0 +1,167 @@
+{% extends 'dashboard/dashboard_base.html' %}
+
+{% block content %}
+
+<div class="chef-header" style="text-align: center;">
+
+    <h1>Chef Dashboard</h1>
+    <p>Kitchen Operations Center</p>
+</div>
+
+<div class="stats-grid">
+<div class="section-card">
+
+    <h2>Incoming Orders</h2>
+
+    <div class="chef-orders-grid">
+
+        {% for order in incoming_orders %}
+
+        <div class="chef-orders-card">
+            <h3>
+                Order #{{ order.id }}
+            </h3>
+
+            <p><strong>Type:</strong> {{ order.get_order_type_display }} </p>
+            <p><strong>Status:</strong> {{ order.get_status_display }} </p>
+            <p><strong>CUstomer:</strong> {{ order.user.username }} </p>
+            <p><strong>Time:</strong> {{ order.created_at }} </p>
+
+            <div class="items-list">
+                <h4>Items:</h4>
+                {% for item in order.items.all %}
+
+                    <p> {{ item.food.name }} x {{ item.quantity }} </p>
+                {% endfor %}
+            </div>
+
+            <form method="post" action="{% url 'accept_order' order.id %}">
+                {% csrf_token %}
+                <button class="accept-btn" type="submit">
+                    Accept Order
+                </button>
+            </form>
+
+        </div>
+
+
+
+        {% empty %}
+
+            <p class="empty">No incoming Orders</p>
+
+        {% endfor %}
+    </div>
+
+</div>
+
+<div class="section-card">
+
+    <h2>Accepted Orders</h2>
+
+    <div class="chef-orders-grid">
+
+        {% for order in accepted_orders %}
+        <div class="chef-orders-card">
+            <h3>Order #{{ order.id }}</h3>
+
+            <p><strong>Type: </strong> {{ order.get_order_type_display }} </p>
+            <p><strong>Status:</strong> {{ order.get_status_display }} </p>
+
+            <div class="items-list">
+                <h4>Items:</h4>
+
+                {% for item in order.items.all %}
+                    <p>{{ item.food.name }} x {{ item.quantity }} </p>
+                {% endfor %}
+            </div>
+
+            <form method="post" action="{% url 'start_preparing' order.id %}">
+                {% csrf_token %}
+                <button class="preparing-btn" type="submit">
+                    Start Preparing 
+                </button>
+            </form>
+        </div>
+
+    
+
+        {% empty %}
+            <p class="empty">No accepted orders</p>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+<div class="section-card">
+
+    <h2>Preparing Orders</h2>
+
+    <div class="chef-orders-grid">
+
+        {% for order in preparing_orders %}
+
+        <div class="chef-orders-card">
+            <h3>Order #{{ order.id }}</h3>
+
+            <p><strong>Type: </strong> {{ order.get_order_type_display }} </p>
+            <p><strong>Status:</strong> {{ order.get_status_display }} </p>
+            <div class="items-list">
+                <h4>Items:</h4>
+                {% for item in order.items.all %}
+
+                    <p> {{ item.food.name }} x {{ item.quantity }} </p>
+                {% endfor %}
+            </div>
+            <form method="post" action="{% url 'mark_ready' order.id %}">
+                {% csrf_token %}
+                <button class="ready-btn" type="submit">
+                    Mark Ready
+                </button>
+            </form>
+        </div>
+
+    
+
+        {% empty %}
+
+            <p class="empty">No orders being prepared </p>
+        {% endfor %}
+    </div>
+</div>
+</div>
+
+<div class="section-card">
+
+    <h2>Ready Orders</h2>
+
+    <div class="chef-orders-grid">
+
+        {% for order in ready_orders %}
+
+        <div class="chef-orders-card">
+            <h3>Order #{{ order.id }}</h3>
+
+            <p><strong>Type:</strong> {{ order.get_order_type_display }} </p>
+            <p><strong>Status:</strong> {{ order.get_status_display }} </p>
+            <div class="items-list">
+                <h4>Items:</h4>
+                {% for item in order.items.all %}
+
+                <p> {{ item.food.name }} x {{ item.quantity }} </p>
+        
+                {% endfor %}
+            </div>
+            <span class="status-badge">Ready for Pickup</span>
+        </div>
+
+    
+        {% empty %}
+            <p class="empty">No ready orders</p>
+
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

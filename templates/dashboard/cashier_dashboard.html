@@ -1,0 +1,107 @@
+{% extends 'dashboard/dashboard_base.html' %}
+
+{% block content %}
+
+
+<div class="cashier-header" style="text-align: center;">
+    <h1>Cashier Dashboard</h1>
+    <p>Payment and Pickup Operations Center</p>
+</div>
+
+<div class="stats-grid">
+<div class="section-card">
+    <h2>Orders</h2>
+    <div class="cashier-orders-grid">
+        {% for order in orders %}
+
+        <div class="cashier-order-card">
+
+            <div class="card-header">
+                <h3>Order #{{ order.id }}</h3>
+                <span class="status-badge">{{ order.get_status_display }}</span>
+
+            </div>
+
+            <p><strong>Customer:</strong> {{ order.user.username }} </p>
+            <p><strong>Type:</strong> {{ order.get_order_type_display }} </p>
+
+            {% if order.payment %}
+            <div class="payment-section">
+                <p><strong>Payment Method:</strong> {{ order.payment.get_method_display }}</p>
+               <!--<p><strong>Payment Status:</strong> {{ order.payment.get_status_display }}</p>--> 
+                {% if order.payment.status == "paid" %}
+                    <span class="payment-badge paid">Payment Received</span>
+                {% elif order.payment.status == "pending" %}
+                    <span class="payment-badge pending">Pending</span>
+                {% elif order.payment.status == "failed" %}
+                    <span class="payment-badge failed">Failed</span>
+                {% elif order.payment.status == "refunded" %}
+                    <span class="payment-badge refunded">Refunded</span>
+                {% endif %}
+                {% if order.payment.transaction_id %}
+                    <p><strong>Transaction:</strong> {{ order.payment.transaction_id }} </p>
+                {% endif %}
+
+            </div>
+
+             
+
+           {% else %}
+                <p><strong>Payment:</strong> No Payment Record</p>
+
+            
+            {% endif %}
+
+            <p><strong>Status: </strong> {{ order.get_status_display }} </p>
+            <p><strong>Total: </strong> Ksh {{ order.total_price }} </p>
+            <p><strong>Created: </strong> {{ order.created_at }} </p>
+
+            <div class="items-list">
+                <h4>Items</h4>
+
+                {% for item in order.items.all %}
+
+                    <p> {{ item.food.name }} x {{ item.quantity }} </p>
+                {% endfor %}
+
+
+            </div>
+
+            {% if order.payment.status == "pending" %}
+            <form method="post" action="{% url 'mark_payment_paid' order.payment.id %}">
+                {% csrf_token %}
+
+                <button class="payment-btn" type="submit">
+                    Mark as Paid
+                </button>
+            </form>
+            {% endif %}
+
+           
+            {% if order.order_type == "takeout" and order.status == "ready" and order.payment.status == "paid" %}
+            <form action="{% url 'complete_takeout_order' order.id %}">
+                {% csrf_token %}
+
+                <button class="pickup-btn-cashier" type="submit">
+                    Complete Pickup
+                </button>
+            </form>
+            {% endif %}
+
+            {% if order.order_type == "takeout" and order.status == "ready" and order.payment.status != "paid"  %}
+                <p class="payment-warning">
+                    Payment Required Before Pickup
+                </p>
+            {% endif %}
+         </div>
+
+
+        {% empty %}
+
+            <p class="empty">No orders found</p>
+
+        {% endfor %}
+    </div>
+</div>
+</div>
+{% endblock %}

@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'accounts',
     'restaurant',
     'menu',
@@ -137,3 +138,11 @@ MEDIA_ROOT = BASE_DIR / 'media'
 AUTH_USER_MODEL = 'accounts.User'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+MPESA_CONSUMER_KEY = "KKR7tgh6ru5Oeg8GpXXI14g9xmb80nlATAbuvZBEOhnBYmSs"
+MPESA_CONSUMER_SECRET = "MI3Cuo5lVGtIkK7GisgPEqAVbjwbmRtExSvBuncx9HFoigzKiTZpW2yA15vYVITd"
+
+MPESA_SHORTCODE = "174379"
+
+MPESA_PASSKEY = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919"

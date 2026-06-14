@@ -1,9 +1,22 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Order Placed Successfully</h1>
+<div style="text-align: center; padding: 50px;">
+    <h1>Order Placed Successfully</h1>
 
-<p>
-    Your take out order is now being processed.
-</p>
+    <p>
+        Your  order is now being processed.
+    </p>
+
+    <a href="{% url 'my_orders' %}"
+       style="
+       display:inline-block;
+       padding:12px 24px;
+       background:#222;
+       color:white;
+       text-decoration:none;
+       border-radius:8px;">
+        Track My Order
+    </a>
+</div>
 {% endblock %}

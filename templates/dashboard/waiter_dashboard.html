@@ -1,0 +1,56 @@
+{% extends 'dashboard/dashboard_base.html' %}
+
+{% block content %}
+
+<div class="waiter-header" style="text-align: center;">
+    <h1>Waiter Dashboard</h1>
+    <p>Dining Service Center</p>
+
+</div>
+
+<div class="section-card">
+    <h2>Ready To Serve</h2>
+    <div class="waiter-orders-grid">
+        {% for order in ready_orders %}
+
+        <div class="waiter-order-card">
+
+            <div class="card-header">
+                <h3>Order #{{ order.id }}</h3>
+                <span class="status-badge">{{ order.get_status_display }}</span>
+            </div>
+
+            <p><strong>Customer:</strong> {{ order.user.username }} </p>
+            <p><strong>Status:</strong> {{ order.get_status_display }} </p>
+            <p><strong>Created:</strong> {{ order.created_at }} </p>
+
+            <div class="items-list">
+                <h4>Items</h4>
+
+                {% for item in order.items.all %}
+
+                    <p>{{ item.food.name }} x {{ item.quantity }} </p>
+                {% endfor %}
+
+            </div>
+
+            <form action="{% url 'serve_order' order.id %}" method="post">
+                {% csrf_token %}
+                <button class="serve-btn" type="submit">
+                    Serve Order
+                </button>
+            </form>
+    
+    
+        </div>
+
+
+
+        {% empty %}
+
+        <p class="empty">No orders ready to serve</p>
+
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

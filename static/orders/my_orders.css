@@ -1,0 +1,72 @@
+.orders-container{
+    width: 80%;
+    margin: auto;
+    padding: 40px 0;
+}
+
+.order-card{
+    background: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.order-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.badge{
+    background: #222;
+    color: white;
+    padding: 5px 20px;
+    border-radius: 20px;
+}
+
+.tracking{
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.step{
+    padding: 8px;
+    border-left: 4px solid #ccc;
+    padding-left: 10px;
+    opacity: 0.5;
+}
+
+.step.active{
+    border-color: orange;
+    opacity: 1;
+    font-weight: bold;
+}
+
+.step.done{
+    border-color: green;
+    opacity: 1;
+}
+
+.refund-btn{
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 18px ;
+    background:#d32f2f;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: .3s;
+}
+
+.refund-btn:hover{
+    transform:translateY(-2px);
+
+}
+
+.refund-btn:visited{
+    color: white;
+}

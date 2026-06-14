@@ -1,0 +1,12 @@
+{% extends 'dashboard/dashboard_base.html' %}
+{% block content %}
+
+<h1>Owner Dashboard</h1>
+<p>Welcome {{ request.user.username }}</p>
+
+<p>Total Orders: {{ total_orders }}</p>
+<p>Total Revenue: {{ total_revenue }}</p>
+<p>Pending Orders: {{ pending_orders }}</p>
+<p>Completed Orders: {{ completed_orders }}</p>
+<p>Total Foods: {{ total_foods }}</p>
+{% endblock %}

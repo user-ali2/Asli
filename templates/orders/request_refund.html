@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="refund-container"></div>
+    <h2>
+        Request Refund
+    </h2>
+
+    <p>Order #{{ order.id }}</p>
+
+    <form method="POST">
+        <label>Reason for Refund</label>
+        <select name="reason" required>
+            <option value="">Select a reason</option>
+            <option value="Food not delivered">Food not delivered</option>
+            <option value="Wrong order receaived">Wrong order received </option>
+            <option value="Missing items in order">Missing items in order</option>
+            <option value="Duplicate payment charged">Duplicate payment charged</option>
+            <option value="Order cancelled by restaurant">Order cancelled by restaurant</option>
+            <option value="Food unsafe or spoiled">Food unsafe or spoiled</option>
+            <option value="Charged but order not processed">Charged but order not processed</option>
+            <option value="Other">Other</option>
+        </select>
+
+        <label>Additional Details</label>
+        <textarea name="extra_details" rows="4" placeholder="Provide Additional Information">
+
+        </textarea>
+        <button type="submit">Submit Refund Request</button>
+    </form>
+
+</div>
+{% endblock %}

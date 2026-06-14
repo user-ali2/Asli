@@ -13,12 +13,25 @@ class User(AbstractUser):
         return self.groups.filter(name ='Owner').exists()
     
     @property
-    def is_management(self):
-        return self.groups.filter(name = 'Management').exists()
+    def is_manager(self):
+        return self.groups.filter(name = 'Manager').exists()
     
     @property
-    def is_staff_member(self):
-        return self.groups.filter(name = 'Staff').exists()
+    def is_chef(self):
+        return self.groups.filter(name = 'Chef').exists()
+    
+    @property
+    def is_waiter(self):
+        return self.groups.filter(name = 'Waiter').exists()
+    
+    @property
+    def is_cashier(self):
+        return self.groups.filter(name = 'Cashier').exists()
+
+    
+    @property
+    def is_rider_staff(self):
+        return self.groups.filter(name = 'Rider Staff').exists()
     
     @property
     def is_customer(self):

@@ -1,0 +1,127 @@
+{% extends 'dashboard/dashboard_base.html' %}
+
+{% block content %}
+<div class="rider-header">
+    <h1>Rider Dashboard</h1>
+    <p>Delivery Operations Center</p>
+</div>
+
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <h3>Total Assigned Orders</h3>
+        <p>{{ total_assigned }}</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>Active Deliveries</h3>
+        <p>{{ total_active }}</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>Completed Deliveries</h3>
+        <p>{{ delivered_orders.count }}</p>
+    </div>
+
+
+
+</div>
+
+<div class="section-card">
+
+    <h2>Active Deliveries</h2>
+
+    <div class="rider-orders-grid">
+
+        {% for order in active_orders %}
+        <div class="rider-orders-card">
+            <h3>Order #{{ order.id }}</h3>
+
+            <p><strong>Customer:</strong> {{ order.full_name }} </p>
+            <p><strong>Phone:</strong> {{ order.phone}} </p>
+            <p><strong>Area:</strong> {{ order.area }} </p>
+            <p><strong>House/State Name:</strong> {{ order.house_name }} </p>
+            <p><strong>Plot/House Number:</strong> {{ order.plot_number }} </p>
+            <p><strong>Status: </strong> {{ order.get_status_display }} </p>
+            {% if order.delivery_notes %}
+                <p><strong>Delivery Notes:</strong> {{ order.delivery_notes }} </p>
+            {% endif %}
+            <div class="items-list-rider">
+                <h4>Items</h4>
+
+                {% for item in order.items.all %}
+
+                    <p>{{ item.food.name }} x {{ item.quantity }} </p>
+                {% endfor %}
+            </div>
+
+            {% if order.status == "ready" %}
+
+            <form method="post" action="{% url 'pickup_order' order.id %}">
+                {% csrf_token %}
+                <button class="pickup-btn" type="submit">
+                    Pick Up Order
+                </button>
+            </form>
+            {% endif %}
+
+            {% if order.status == "picked_up" %}
+
+            <form action="{% url 'start_delivery' order.id %}" method="post">
+                {% csrf_token %}
+                <button class="delivery-btn" type="submit">
+                    Start Delivery
+                </button>
+            </form>
+            {% endif %}
+
+            {% if order.status == "on_the_way" %}
+
+            <form action="{% url 'mark_delivered' order.id %}" method="post">
+                {% csrf_token %}
+                <button class="complete-btn" type="submit">
+                    Mark Delivered
+                </button>
+            </form>
+            {% endif %}
+
+        </div>
+
+
+
+        {% empty %}
+        <p class="empty">No active deliveries</p>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="section-card">
+    <h2>Completed Deliveries</h2>
+    <div class="rider-order-grid completed-grid">
+        {% for order in delivered_orders %}
+
+        <div class="delivery-card completed">
+
+            <div class="card-header">
+                <h3>Order #{{ order.id }}</h3>
+                <span class="completed-badge">
+                     Delivered
+                </span>
+
+            </div>
+
+            <p><strong>Customer: </strong> {{ order.full_name }} </p>
+            <p><strong>Status:</strong> {{ order.get_status_display }} </p>
+
+            <p><strong>Total:</strong> {{ order.total_price }} </p>
+        </div>
+
+
+
+        {% empty %}
+            <p class="empty">No completed deliveries</p>
+
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

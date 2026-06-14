@@ -1,0 +1,226 @@
+{% extends 'dashboard/dashboard_base.html' %}
+
+{% block content %}
+<div class="manager-header" style="text-align: center;">
+    <h1>Manager Dashboard</h1>
+    <p>Restaurant Operations Center</p>
+</div>
+
+
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <h3>Total Orders</h3>
+        <p>{{ total_orders }}</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>Total Revenue</h3>
+        <p>Ksh {{ total_revenue }}</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>Pending Orders</h3>
+        <p>{{ pending_orders }}</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>Completed Orders</h3>
+        <p>{{ completed_orders }}</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>Total Foods</h3>
+        <p>{{ total_foods }}</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>Delayed Orders</h3>
+        <p>{{ delayed_orders.count }}</p>
+    </div>
+
+</div>
+
+
+
+
+
+
+<div class="section-card">
+    <h2>Ready Delivery Orders</h2>
+    <div class="ready-orders-grid">
+
+        {% for order in ready_delivery_orders %}
+
+        <div class="delivery-card ">
+
+    
+
+            <h3>Order #{{ order.id }}</h3>
+
+            <p><strong>Customer: </strong>{{ order.full_name }}</p>
+            <p><strong>Area:</strong>{{ order.area }}</p>
+            <p><strong>Total:</strong>{{ order.total_price }}</p>
+
+            {% if available_riders %}
+
+                <form action="{% url 'assign_rider' order.id %}" method="post">
+                    {% csrf_token %}
+
+                    <select name="rider_id" >
+                        {% for rider in available_riders %}
+
+                            <option value="{{ rider.id }}">
+                                {{ rider.user.username }}
+                                {{ rider.vehicle_type }}
+                            </option>
+                        {% endfor %}
+
+                    </select>
+
+                    <button type="submit" class="assign-btn">
+                        Assign Rider
+                    </button>
+                </form>
+        
+            {% else %}
+            
+                <p class="warning"><strong>No riders currently available</strong></p>
+
+            {% endif %}
+        </div>
+
+        {% empty %}
+        <p class="empty">No delivery orders waiting for assignment</p>
+
+        {% endfor %}
+    
+    </div>
+
+</div>
+
+<div class="section-card">
+
+    <h2>Assigned Delivery Orders</h2>
+   <div class="ready-orders-grid">
+
+        {% for order in assigned_delivery_orders %}
+
+            {% if order.assigned_staff %}
+
+            <div class="delivery-card">
+                <h3>Order #{{ order.id }}</h3>
+
+                <p><strong>Customer:</strong>{{ order.full_name }}</p>
+                <p><strong>Assigned Rider:</strong>{{ order.assigned_staff.user.username }}</p>
+
+                <p><strong>Vehicle:
+
+                    </strong>{{ order.assigned_staff.get_vehicle_type_display }}
+                </p>
+
+                <p><strong>Status:</strong><span class="status-badge">{{ order.get_status_display }}</span></p>
+            </div>
+            {% endif %}
+
+        {% empty %}
+
+        <p class="empty">No assigned delivery orders</p>
+
+        {% endfor %}
+   </div>
+</div>
+
+<div class="section-card">
+
+    <h2>Undelivered Delivery Orders</h2>
+
+    
+
+        {% for order in undelivered_orders %}
+
+        <div class="order-row">
+
+    
+            <span>Order #{{ order.id }}</span>
+            <span>{{ order.status }}</span>
+            <span>{{order.full_name}}</span>
+            <span>{{ order.phone }}</span>
+    
+        </div>
+        {% empty %}
+            <p class="empty">There is no undelivered orders</p>
+
+        {% endfor %}
+
+    
+
+</div>
+
+<div class="stats-grid">
+
+    <div class="section-card">
+
+        <h2>Delayed Orders</h2>
+
+        {% for order in delayed_orders %}
+            <div class="order-row alert">
+
+        
+                <span> Order #{{ order.id }}</span>
+                <span>{{ order.order_type }}</span>
+                <span>{{ order.created_at }}</span>
+
+        
+            </div>
+        {% empty %}
+            <P class="empty">No delayed orders</P>
+        {% endfor %}
+
+    </div>
+
+
+    <div class="section-card">
+
+        <h2>Cancelled Orders</h2>
+        {% for order in cancelled_orders %}
+            <div class="order-row">
+
+    
+                <span>Order #{{ order.id }}</span>
+                <span>{{ order.created_at }}</span>
+                <span>{{ order.order_type }}</span>
+                <span>Ksh {{ order.total_price }}</span>
+    
+
+            </div>
+
+        {% empty %}
+            <p class="empty">No cancelled orders</p>
+        {% endfor %}
+
+    </div>
+
+    <div class="section-card">
+
+        <h2>Unable to proceed orders</h2>
+
+            {% for order in failed_orders %}
+
+        
+                <span>Order #{{ order.id }}</span>
+                <span>{{ order.created_at }}</span>
+                <span>{{ order.order_type }}</span>
+                <span>Ksh {{ order.total_price }}</span>
+    
+
+        {% empty %}
+            <p class="empty">No failed Orders</p>
+
+        {% endfor %}
+
+    </div>
+    </div>
+
+
+{% endblock %}

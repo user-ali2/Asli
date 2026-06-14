@@ -11,19 +11,106 @@
         <h1>Checkout</h1>
         <p>Complete your order</p>
     </div>
-
+    <h3>
+        Order Type: {{ order_type|title }}
+    </h3>
     <div class="checkout-card">
         <div class="checkout-summary">
             <h2>Order Summary</h2>
 
             <div class="summary-box">
-                <span>Total Amount</span>
+                <span>Items</span>
+                <strong> {{ cart.total_items }} </strong>
+            </div>
+
+            <div class="summary-box">
+                <span>Subtotal Amount</span>
                 <strong>Ksh {{ cart.total_price }}</strong>
             </div>
 
+            <div class="summary-box">
+                <span>Order Type</span>
+                <strong>{{ order_type|title }}</strong>
+            </div>
+
+            {% if order_type == "delivery" and form.zone %}
+            <div class="summary-box">
+                <span>Delivery Zone</span>
+                <strong>Selected in form </strong>
+            </div>
+            {% endif %}
+
+            <hr>
+
             <form method="post" class="checkout-form">
                 {% csrf_token %}
-                {{ form.as_p }}
+                {% if order_type == "dine_in" %}
+
+                    <div class="form-group">
+                        <label>Payment Method</label>
+                        {{ form.payment_method }}
+                    </div>
+
+                {% elif order_type == "takeout" %}
+
+                    <div class="form-group">
+                        <label>Pickup Time</label>
+                        {{ form.pickup_time }}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Payment Method</label>
+                        {{ form.payment_method }}
+                    </div>
+
+                {% elif order_type == "delivery" %}
+                    
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        {{ form.full_name }}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        {{ form.phone }}
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            Area
+                        </label>
+
+                        {{ form.area }}
+                    </div>
+
+                    <div class="form-group">
+                        <label>House/State Name</label>
+                        {{ form.house_name }}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Plot/House Number</label>
+                        {{ form.plot_number }}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Delivery Notes</label>
+                        {{ form.delivery_notes }}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Delivery Zone</label>
+                        {{ form.zone }}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Payment Method</label>
+                        {{ form.payment_method }}
+                    </div>
+
+                {% endif %}
+
+
 
                 <button type="submit" class="place-order-btn">Place Order</button>
             </form>
