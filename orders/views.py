@@ -379,9 +379,22 @@ def mpesa_callback(request):
             {"error": "POST Required"},
             status=405
         )
-    data = json.loads(request.body)
+    
+    try:
 
-    result = data["Body"]["stkCallback"]
+        data = json.loads(request.body)
+    
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
+
+    try:
+        result = data["Body"]["stkCallback"]
+
+    except KeyError:
+        return JsonResponse({
+            "error": "Invalid callback structure"
+        }, status= 400
+        )
 
     checkout_id = result["CheckoutRequestID"]
 
@@ -391,7 +404,10 @@ def mpesa_callback(request):
 
         print("Payment Successfull")
 
-        metadata = result["CallbackMetadata"]["Item"]
+        metadata = result.get(
+            "CallbackMetadata",
+            {}
+        ).get("Item",[])
         
         receipt = None
 
@@ -402,28 +418,33 @@ def mpesa_callback(request):
         try:
             attempt = PaymentAttempt.objects.get(mpesa_checkout_id=checkout_id)
             payment = attempt.payment
+            if attempt.status == "paid":
+                return JsonResponse({"status": "already_processed"},)
 
         except PaymentAttempt.DoesNotExist:
-            return JsonResponse({"error": "Payment not found"}, status=404)
+            return JsonResponse({"error": "Payment attempt not found"}, status=404)
         
-        if attempt.status == "paid":
-            return JsonResponse({"status": "Already processed"})
+        
+
         
         with transaction.atomic():
             attempt.status = "paid"
             attempt.mpesa_receipt_number = receipt
-            payment.paid_at = timezone.now()
+            
             attempt.save()
 
             
             payment.status = "paid"
+            payment.paid_at = timezone.now()
             payment.save()
 
+           
     else:
         try:
             attempt = PaymentAttempt.objects.get(mpesa_checkout_id=checkout_id)
-            attempt.status = "failed"
-            attempt.save()
+            if attempt.status != "paid":
+                attempt.status = "failed"
+                attempt.save()
 
         except PaymentAttempt.DoesNotExist:
             pass

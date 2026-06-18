@@ -17,7 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from django.conf import settings 
+from rest_framework_simplejwt.views import(
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 from django.conf.urls.static import static
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,6 +31,10 @@ urlpatterns = [
     path('menu/', include('menu.urls')),
     path('orders/', include('orders.urls')),
     path('dashboard/', include('dashboard.urls')),
+    path("api/", include("orders.api_urls")),
+    path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("api/", include("menu.api_urls")),
 ]
 
 if settings.DEBUG:

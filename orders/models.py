@@ -59,7 +59,7 @@ class DeliveryZone(models.Model):
 
     delivery_type = models.CharField(max_length=30, choices=DELIVERY_TYPES)
 
-    external_delivery_fee = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    delivery_fee = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     estimated_time = models.CharField(max_length=50)
 
@@ -232,6 +232,8 @@ class OrderItem(models.Model):
         on_delete=models.CASCADE
     )
 
+    food_name = models.CharField(max_length=200)
+
     quantity = models.PositiveIntegerField()
 
     price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -240,7 +242,7 @@ class OrderItem(models.Model):
         return self.price * self.quantity
     
     def __str__(self):
-        return f"{self.food.name}"
+        return self.food_name
     
 
 
@@ -389,26 +391,27 @@ class PaymentAttempt(models.Model):
     )
 
     mpesa_checkout_id = models.CharField(
-        max_length=100,
+        max_length=255,
+        unique=True,
         blank=True,
         null=True
     )
 
     mercahant_request_id = models.CharField(
-        max_length=100,
+        max_length=255,
         blank=True,
         null=True
     )
 
     mpesa_receipt_number = models.CharField(
-        max_length=100,
+        max_length=255,
         blank=True,
         null=True
 
     )
 
     status = models.CharField(
-        max_length=50,
+        max_length=30,
         blank=True,
         null=True
     )
